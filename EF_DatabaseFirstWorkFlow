@@ -1,0 +1,93 @@
+ENTITY FRAMEWORK
+- is an ORM framework. ORM stands for Object Relational Mapping.
+
+PART 1
+
+Ado.net classes
+1. sqlconnection
+2. sqlcommand
+3. sqldatareader
+
+writing persistence framework
+1. stored procedure
+2. manual Mapping
+
+ENTITY FRAMEWORK
+- no need to write SP
+- no manaage database connections
+- no manual mapping
+
+
+PART 2
+
+WORK FLOW WHEN USING ENTITY FRAMEWORK
+1. database first
+  - we design our TABLE
+  - EF generate domain classes
+
+
+2. code first
+  - we create domain classes
+  - EF generates database tables
+
+PART 3
+DEMO DATABASE FIRST WORKFLOW
+
+1. Create table
+
+Create table Departments
+(
+     ID int primary key identity,
+     Name nvarchar(50),
+     Location nvarchar(50)
+)
+
+Create table Employees
+(
+     ID int primary key identity,
+     FirstName nvarchar(50),
+     LastName nvarchar(50),
+     Gender nvarchar(50),
+     Salary int,
+     DepartmentId int foreign key references Departments(Id)
+)
+
+Insert into Departments values ('IT', 'New York')
+Insert into Departments values ('HR', 'London')
+Insert into Departments values ('Payroll', 'Sydney')
+
+Insert into Employees values ('Steve', 'Pound', 'Male', 45000, 3)
+Insert into Employees values ('Ben', 'Hoskins', 'Male', 70000, 1)
+Insert into Employees values ('Philip', 'Hastings', 'Male', 45000, 2)
+
+
+2. Create new project
+3. Install EntityFramework
+4. Add New Item > ADO.NET Entity Data Model
+5. Name EmpModel
+6. Select EF designer from database > NEXT
+7. Yes include sensitive database > NEXT
+8. Select tables or views or stored procedures > FINISH
+
+9. USE entity framework in saving
+
+  public ActionResult Save() {
+
+     try {
+         var context = new HPCOMMON2Entities();
+         int i = 0;
+
+         var department = new Department()
+         {
+             Name = "TestName",
+             Location = "TestLocation",
+         };
+
+         context.Departments.Add(department);
+         context.SaveChanges();
+
+         return Json("Done", JsonRequestBehavior.AllowGet);
+     } catch (Exception e) {
+         return Json("Failed", JsonRequestBehavior.AllowGet);
+     }
+  }
